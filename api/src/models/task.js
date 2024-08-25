@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { db } from "../config/db.js";
 
-export const Task = db.define("Task", {
+export const Task = db.define("task", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -16,7 +16,7 @@ export const Task = db.define("Task", {
     allowNull: false,
   },
   priority: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   image: {

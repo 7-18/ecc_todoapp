@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { db } from "../config/db.js";
 
-export const Comment = db.define("Comment", {
+export const Comment = db.define("comment", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
