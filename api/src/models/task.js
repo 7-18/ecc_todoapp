@@ -15,6 +15,10 @@ export const Task = db.define("Task", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  priority: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   image: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -23,6 +27,10 @@ export const Task = db.define("Task", {
     type: DataTypes.INTEGER,
     allowNull: false,
     foreignKey: true,
+  },
+  status: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
   },
   createdAt: {
     type: DataTypes.DATE,
