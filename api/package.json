@@ -3,7 +3,7 @@
   "description": "API for the ECC_TodoAPP application",
   "private": true,
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
     "start": "npx nodemon src/index.js",
@@ -14,12 +14,22 @@
     "name": "Kevin Brian Briceno",
     "email": "kevinbrianbr@gmail.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/7-18/ecc_todoapp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/7-18/ecc_todoapp/issues"
+  },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "morgan": "^1.10.0",
     "pg": "^8.12.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "dotenv": "^16.4.5",
