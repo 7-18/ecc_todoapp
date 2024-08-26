@@ -36,6 +36,8 @@ const router = Router();
  *               priority:
  *                 type: integer
  *                 example: 1
+ *               user_id:
+ *                 type: integer
  *               statusTask:
  *                 type: string
  *                 example: "In Progress"
@@ -46,6 +48,8 @@ const router = Router();
  *      - title
  *      - description
  *      - priority
+ *      - user_id
+ *      - statusTask
  *      - status
  *     responses:
  *       201:
@@ -172,6 +176,8 @@ const router = Router();
  *               priority:
  *                 type: string
  *                 example: "High"
+ *               user_id:
+ *                 type: integer
  *               statusTask:
  *                 type: string
  *                 example: "In Progress"

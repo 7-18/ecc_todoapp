@@ -27,6 +27,9 @@ import { Comment } from "./comment.js";
  *       user_id:
  *         type: integer
  *         description: The user ID.
+ *       statusTask:
+ *         type: string
+ *         description: The status of the task.
  *       status:
  *         type: boolean
  *         description: The status of the task.
@@ -79,6 +82,7 @@ export const Task = db.define(
       allowNull: false,
       validate: {
         isIn: [["pending", "in progress", "completed"]],
+        isLowercase: true,
       },
     },
     status: {
