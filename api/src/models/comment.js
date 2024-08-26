@@ -1,32 +1,54 @@
 import { DataTypes } from "sequelize";
 import { db } from "../config/db.js";
 
-export const Comment = db.define("comment", {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *   Comment:
+ *     type: object
+ *     properties:
+ *       id:
+ *         type: integer
+ *         description: The comment ID.
+ *       text:
+ *         type: string
+ *         description: The text (message) of the comment.
+ *       user_id:
+ *         type: integer
+ *         description: The user ID.
+ *       task_id:
+ *         type: integer
+ *         description: The task ID.
+ */
+
+export const Comment = db.define(
+  "comment",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    text: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [5, 100],
+      },
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      foreignKey: true,
+    },
+    task_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      foreignKey: true,
+    },
   },
-  text: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  user_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    foreignKey: true,
-  },
-  task_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    foreignKey: true,
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
