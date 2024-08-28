@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {  createUser,  getUsers,  getUserById,  updateUser,  deleteUser } from "../controllers/user.js";
+import { createUser, getUsers, getUserById, updateUser, deleteUser, getUserByEmail } from "../controllers/user.js";
 const router = Router();
 
 /**
@@ -235,6 +235,7 @@ const router = Router();
 router.post("/users/save", createUser);
 router.get("/users", getUsers);
 router.get("/users/:id", getUserById);
+router.get("/users/email/:email", getUserByEmail);
 router.put("/users/update/:id", updateUser);
 router.delete("/users/delete/:id", deleteUser);
 

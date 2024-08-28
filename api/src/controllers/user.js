@@ -16,13 +16,13 @@ export const getUsers = async (req, res) => {
     const users = await User.findAndCountAll({
       where: search
         ? {
-            [Op.or]: [
-              { username: { [Op.iLike]: `%${search}%` } },
-              { firstName: { [Op.iLike]: `%${search}%` } },
-              { lastName: { [Op.iLike]: `%${search}%` } },
-              { email: { [Op.iLike]: `%${search}%` } },
-            ],
-          }
+          [Op.or]: [
+            { username: { [Op.iLike]: `%${search}%` } },
+            { firstName: { [Op.iLike]: `%${search}%` } },
+            { lastName: { [Op.iLike]: `%${search}%` } },
+            { email: { [Op.iLike]: `%${search}%` } },
+          ],
+        }
         : null,
       where: { status: true },
       offset: skip ? parseInt(skip) : 0,
@@ -31,6 +31,20 @@ export const getUsers = async (req, res) => {
     res
       .status(200)
       .json({ statusCode: 200, message: "List of users", data: users.rows, total: users.count });
+  } catch (error) {
+    res.status(400).json({ statusCode: 400, error: error.message });
+  }
+};
+
+export const getUserByEmail = async (req, res) => {
+  try {
+    const { email } = req.params;
+    const user = await User.findOne({ where: { email: email } });
+    if (user) {
+      res.status(200).json({ statusCode: 200, message: "User found", data: user });
+    } else {
+      res.status(404).json({ statusCode: 404, error: "User not found" });
+    }
   } catch (error) {
     res.status(400).json({ statusCode: 400, error: error.message });
   }

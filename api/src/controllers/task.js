@@ -16,11 +16,11 @@ export const getTasks = async (req, res) => {
     const tasks = await Task.findAndCountAll({
       where: search
         ? {
-            [Op.or]: [
-              { title: { [Op.iLike]: `%${search}%` } },
-              { description: { [Op.iLike]: `%${search}%` } },
-            ],
-          }
+          [Op.or]: [
+            { title: { [Op.iLike]: `%${search}%` } },
+            { description: { [Op.iLike]: `%${search}%` } },
+          ],
+        }
         : null,
       where: { status: true },
       order: sort ? [sort.split(":")] : [["priority", "ASC"]],
@@ -106,8 +106,9 @@ export const deleteTask = async (req, res) => {
 };
 
 export const deleteAllTasks = async (req, res) => {
+  const { user_id } = req.params;
   try {
-    await Task.destroy({ where: {} });
+    await Task.destroy({ where: { user_id: user_id } });
     res.status(200).json({ statusCode: 200, message: "All tasks deleted successfully" });
   } catch (error) {
     res.status(400).json({ statusCode: 400, error: error.message });

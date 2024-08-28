@@ -142,3 +142,38 @@ export const TaskUserView = db.define(
     freezeTableName: true,
   }
 );
+
+export const TaskImageUserView = db.define(
+  "task_image_user_view",
+  {
+    task_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+    },
+    task_title: {
+      type: DataTypes.STRING,
+    },
+    task_image: {
+      type: DataTypes.STRING,
+    },
+    task_status: {
+      type: DataTypes.BOOLEAN,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+    },
+    task_creator_first_name: {
+      type: DataTypes.STRING,
+    },
+    task_creator_last_name: {
+      type: DataTypes.STRING,
+    },
+    task_creator_avatar: {
+      type: DataTypes.STRING,
+    },
+  },
+  {
+    timestamps: false,
+    freezeTableName: true,
+  }
+);

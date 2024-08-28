@@ -297,10 +297,16 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/tasks/deleteAll:
+ * /api/v1/tasks/deleteAll/{user_id}:
  *   delete:
  *     summary: Delete all tasks
  *     tags: [Task]
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: string
+ *         required: true
  *     responses:
  *       200:
  *         description: All tasks deleted successfully
@@ -327,6 +333,6 @@ router.get('/tasks/:id', getTaskById);
 router.put('/tasks/update/:id', updateTask);
 router.patch('/tasks/patch/:id', updateTaskStatus);
 router.delete('/tasks/delete/:id', deleteTask);
-router.delete('/tasks/deleteAll', deleteAllTasks);
+router.delete('/tasks/deleteAll/:user_id', deleteAllTasks);
 
 export default router;
