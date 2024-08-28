@@ -4,9 +4,9 @@ import { User } from "../models/user.js";
 export const createUser = async (req, res) => {
   try {
     const user = await User.create(req.body);
-    res.status(201).json({ message: "User created successfully", data: user });
+    res.status(201).json({ statusCode: 201, message: "User created successfully", data: user });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ statusCode: 400, error: error.message });
   }
 };
 
@@ -30,9 +30,9 @@ export const getUsers = async (req, res) => {
     });
     res
       .status(200)
-      .json({ message: "List of users", data: users.rows, total: users.count });
+      .json({ statusCode: 200, message: "List of users", data: users.rows, total: users.count });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ statusCode: 400, error: error.message });
   }
 };
 
@@ -41,12 +41,12 @@ export const getUserById = async (req, res) => {
     const { id } = req.params;
     const user = await User.findByPk(id);
     if (user) {
-      res.status(200).json({ message: "User found", data: user });
+      res.status(200).json({ statusCode: 200, message: "User found", data: user });
     } else {
-      res.status(404).json({ error: "User not found" });
+      res.status(404).json({ statusCode: 404, error: "User not found" });
     }
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ statusCode: 400, error: error.message });
   }
 };
 
@@ -58,12 +58,12 @@ export const updateUser = async (req, res) => {
     });
     if (updated) {
       const updatedUser = await User.findByPk(id);
-      res.status(202).json({ message: "User updated successfully", data: updatedUser });
+      res.status(202).json({ statusCode: 202, message: "User updated successfully", data: updatedUser });
     } else {
-      res.status(404).json({ error: "User not found" });
+      res.status(404).json({ statusCode: 404, error: "User not found" });
     }
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ statusCode: 400, error: error.message });
   }
 };
 
@@ -74,11 +74,11 @@ export const deleteUser = async (req, res) => {
       where: { id: id },
     });
     if (deleted) {
-      res.status(200).send({ message: "User deleted successfully" });
+      res.status(200).send({ statusCode: 200, message: "User deleted successfully" });
     } else {
-      res.status(404).json({ error: "User not found" });
+      res.status(404).json({ statusCode: 404, error: "User not found" });
     }
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ statusCode: 400, error: error.message });
   }
 };

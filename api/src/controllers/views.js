@@ -10,11 +10,12 @@ export const commentsWithUserData = async (req, res) => {
       limit: limit ? parseInt(limit) : 10,
     });
     res.status(200).json({
+      statusCode: 200,
       message: "List of comments",
       data: commentsWithUserData,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ statusCode: 500, error: error.message });
   }
 };
 
@@ -35,10 +36,11 @@ export const tasksWithUserData = async (req, res) => {
       limit: limit ? parseInt(limit) : 10,
     });
     res.status(200).json({
+      statusCode: 200,
       message: "List of tasks",
       data: tasksWithUserData,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ statusCode: 500, error: error.message });
   }
 };
