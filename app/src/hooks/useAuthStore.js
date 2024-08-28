@@ -3,7 +3,7 @@ import { clearErrorMessage, onChecking, onLogout, onLogin } from "../state";
 
 import { jwtDecode } from "jwt-decode";
 import { signInAmplify, signOutAmplify } from "../services/auth";
-import { getUsers } from "../services/httpClient";
+import { getUserByEmail } from "../services/httpClient";
 
 export const useAuthStore = () => {
   const { status, user, errorMessage } = useSelector((state) => state.auth);
@@ -57,13 +57,14 @@ export const useAuthStore = () => {
       const decodedToken = localStorage.getItem("decodedToken");
       const email = JSON.parse(decodedToken).email;
       if (!accessToken) return dispatch(onLogout());
-      const decodeToken = await getUsers(`search=${email}`);
+      const { data } = await getUserByEmail(email)
+      if (!data) return dispatch(onLogout());
 
       dispatch(
         onLogin({
           accessToken,
           refreshToken,
-          decodeToken: decodeToken,
+          decodedToken: data,
         })
       );
     } catch (error) {
