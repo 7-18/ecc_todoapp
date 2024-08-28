@@ -8,10 +8,11 @@ import viewsRouer from "./routes/views.js";
 const app = express();
 
 app.use(cors({
-  origin: "*",
-  methods: "GET,POST,PUT,DELETE",
+  origin: 'https://main.d28gtcjq0f5p4y.amplifyapp.com',
+  methods: "GET,POST,PUT,PATCH,DELETE",
   allowedHeaders: "Content-Type",
 }));
+
 app.use(express.json());
 
 app.use("/api/v1", userRouter);
