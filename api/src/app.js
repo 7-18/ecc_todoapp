@@ -8,14 +8,14 @@ import viewsRouter from "./routes/views.js";
 const app = express();
 
 const corsOptions = {
-  origin: "https://main.d28gtcjq0f5p4y.amplifyapp.com",
+  origin: ["https://main.d28gtcjq0f5p4y.amplifyapp.com", "http://localhost:5173", "http://ec2-54-92-235-228.compute-1.amazonaws.com"],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
   optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
-
 app.use(express.json());
 
 app.use("/api/v1", userRouter);
