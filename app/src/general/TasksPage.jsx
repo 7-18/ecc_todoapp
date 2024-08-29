@@ -172,7 +172,7 @@ export const TasksPage = () => {
   };
 
   return (
-    <div className={`flex flex-col ${tasks.length > 15 ? "" : "h-screen"}`}>
+    <div className={`flex flex-col ${tasks.length > 15 ? "" : "lg:h-screen"}`}>
       <section className="container mx-auto py-4 px-8">
         {error && <Alert type="error" message={error.message} />}
         {success && <Alert type="success" message={success.message} />}
