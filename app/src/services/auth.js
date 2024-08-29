@@ -10,8 +10,9 @@ export const signUpAmplify = async (user, password) => {
           email: user.email,
           given_name: user.firstName,
           family_name: user.lastName,
+          'custom:id': user.id.toString(),
         },
-        autoSignIn: true,
+        autoSignIn: false,
       },
     });
   } catch (error) {

@@ -36,6 +36,7 @@ export const useAuthStore = () => {
             name: decodedToken.given_name,
             lastName: decodedToken.family_name,
             sub: decodedToken.sub,
+            id: decodedToken["custom:id"],
           })
         );
 

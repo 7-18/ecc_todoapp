@@ -6,7 +6,11 @@ export const createComment = async (req, res) => {
     const comment = await Comment.create(req.body);
     res
       .status(201)
-      .json({ statusCode: 201, message: "Comment created successfully", data: comment });
+      .json({
+        statusCode: 201,
+        message: "Comment created successfully",
+        data: comment,
+      });
   } catch (error) {
     res.status(400).json({ statusCode: 400, error: error.message });
   }
@@ -21,19 +25,16 @@ export const getComments = async (req, res) => {
             [Op.or]: [{ comment: { [Op.iLike]: `%${search}%` } }],
           }
         : null,
-      where: { status: true },
       order: [["createdAt", "DESC"]],
       offset: skip ? parseInt(skip) : 0,
       limit: limit ? parseInt(limit) : 10,
     });
-    res
-      .status(200)
-      .json({
-        statusCode: 200,
-        message: "List of comments",
-        data: comments.rows,
-        total: comments.count,
-      });
+    res.status(200).json({
+      statusCode: 200,
+      message: "List of comments",
+      data: comments.rows,
+      total: comments.count,
+    });
   } catch (error) {
     res.status(400).json({ statusCode: 400, error: error.message });
   }
@@ -44,7 +45,9 @@ export const getCommentById = async (req, res) => {
     const { id } = req.params;
     const comment = await Comment.findByPk(id);
     if (comment) {
-      res.status(200).json({ statusCode: 200, message: "Comment found", data: comment });
+      res
+        .status(200)
+        .json({ statusCode: 200, message: "Comment found", data: comment });
     } else {
       res.status(404).json({ statusCode: 404, error: "Comment not found" });
     }
@@ -61,13 +64,11 @@ export const updateComment = async (req, res) => {
     });
     if (updated) {
       const updatedComment = await Comment.findByPk(id);
-      res
-        .status(200)
-        .json({
-          statusCode: 200,
-          message: "Comment updated successfully",
-          data: updatedComment,
-        });
+      res.status(200).json({
+        statusCode: 200,
+        message: "Comment updated successfully",
+        data: updatedComment,
+      });
     } else {
       res.status(404).json({ statusCode: 400, error: "Comment not found" });
     }
@@ -83,7 +84,9 @@ export const deleteComment = async (req, res) => {
       where: { id: id },
     });
     if (deleted) {
-      res.status(200).json({ statusCode: 200, message: "Comment deleted successfully" });
+      res
+        .status(200)
+        .json({ statusCode: 200, message: "Comment deleted successfully" });
     } else {
       res.status(404).json({ statusCode: 404, error: "Comment not found" });
     }

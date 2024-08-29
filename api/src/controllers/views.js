@@ -7,7 +7,7 @@ export const commentsWithUserData = async (req, res) => {
   try {
     const commentsWithUserData = await CommentUserView.findAll({
       where: { task_id: task_id },
-      order: sort ? [sort.split(":")] : [["comment_createdat", "DESC"]],
+      order: sort ? [sort.split(":")] : [["comment_createdat", "ASC"]],
       offset: skip ? parseInt(skip) : 0,
       limit: limit ? parseInt(limit) : 10,
     });
@@ -59,6 +59,22 @@ export const tasksImagesWithUserData = async (req, res) => {
       statusCode: 200,
       message: "List of tasks with images",
       data: tasksImagesWithUserData,
+    });
+  } catch (error) {
+    res.status(500).json({ statusCode: 500, error: error.message });
+  }
+}
+
+export const tasksImagesWithUsersData = async (req, res) => {
+  const { sort } = req.query;
+  try {
+    const tasksImagesWithUsersData = await TaskImageUserView.findAll({
+      order: sort ? [sort.split(":")] : [["task_id", "ASC"]],
+    });
+    res.status(200).json({
+      statusCode: 200,
+      message: "List of tasks with images and users",
+      data: tasksImagesWithUsersData,
     });
   } catch (error) {
     res.status(500).json({ statusCode: 500, error: error.message });

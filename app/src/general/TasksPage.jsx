@@ -1,15 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "../components/Button";
 import { ModalTask } from "../components/ModalTask";
 import { useAuthStore } from "../hooks/useAuthStore";
-import { useTasks } from "../hooks/useTasks";
 import { uploadImage } from "../services/s3Images";
-import { createTask, deleteTask } from "../services/httpClient";
+import {
+  createComment,
+  createTask,
+  deleteComment,
+  deleteTask,
+  getTasksImageUsersView,
+  updateTaskStatus,
+} from "../services/httpClient";
+import { Plus } from "lucide-react";
+import { Loading } from "../components/Loading";
+import { TaskSkeleton } from "../components/TaskSkeleton";
+import { TaskByUserList } from "../components/TaskByUserList";
+import { Alert } from "../components/Alert";
 
 export const TasksPage = () => {
-  const [newTask, setNewTask] = useState("");
   const { user } = useAuthStore();
-  const { tasks, error } = useTasks(user.id);
+  const user_id = user["custom:id"] || user.id;
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [defaultData, setDefaultData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageName, setImageName] = useState("No file selected");
   const [formValues, setFormValues] = useState({
@@ -17,12 +33,25 @@ export const TasksPage = () => {
     description: "",
     priority: 1,
     image: "",
-    user_id: user.id,
+    user_id: user_id,
     statusTask: "pending",
     status: true,
   });
 
-  const statusLabels = ["pending", "in progress", "completed"];
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await getTasksImageUsersView();
+        setTasks(response.data);
+      } catch (error) {
+        console.error("Error fetching tasks: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   const handleAddTask = async (event) => {
     event.preventDefault();
@@ -38,17 +67,22 @@ export const TasksPage = () => {
             description: formValues.description.toLowerCase(),
             priority: formValues.priority,
             image: jsonResponse.imageUrl,
-            user_id: user.id,
+            user_id: user_id,
             statusTask: formValues.statusTask,
             status: true,
           });
+          const response = await getTasksImageUsersView();
+          setSuccess({ message: "Task added successfully" });
+          setTasks(response.data);
         }
       } catch (error) {
         console.error("Error uploading image: ", error);
       }
       setIsModalOpen(false);
-    };
+    }
   };
+
+  const statusLabels = ["pending", "in progress", "completed"];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -61,7 +95,10 @@ export const TasksPage = () => {
   const handleDeleteTask = async (id) => {
     try {
       await deleteTask(id);
-      console.log('Task deleted');
+      const response = await getTasksImageUsersView();
+      setTasks(response.data);
+      setDefaultData({ message: "Task deleted successfully" });
+      console.log("Task deleted");
     } catch (error) {
       console.error("Error deleting task: ", error);
     }
@@ -89,22 +126,59 @@ export const TasksPage = () => {
     }
   };
 
+  if (saveLoading) {
+    return <Loading />;
+  }
 
-  const handleToggleTask = (id) => {
-    // setNewTasks(
-    //   tasks.map((task) =>
-    //     task.id === id ? { ...task, completed: !task.completed } : task
-    //   )
-    // );
+  const handleToggleTask = async (id, status) => {
+    try {
+      const updatedTask = { statusTask: status };
+      await updateTaskStatus(id, updatedTask);
+      const response = await getTasksImageUsersView();
+      setTasks(response.data);
+      console.log("Task status updated");
+      setSuccess({ message: "Task status updated successfully" });
+    } catch (error) {
+      console.error("Error updating task status: ", error);
+    }
+  };
 
-    console.log('Task status changed');
+  const handleAddComment = async (id, comment) => {
+    try {
+      await createComment({
+        text: comment,
+        task_id: id,
+        user_id: user_id,
+      });
+      const response = await getTasksImageUsersView();
+      setTasks(response.data);
+      setSuccess({ message: "Comment added successfully" });
+      console.log("Comment added");
+    } catch (error) {
+      console.error("Error adding comment: ", error);
+    }
+  };
+
+  const handleDeleteComment = async (id) => {
+    try {
+      await deleteComment(id);
+      const response = await getTasksImageUsersView();
+      setTasks(response.data);
+      setDefaultData({ message: "Comment deleted successfully" });
+      console.log("Comment deleted");
+    } catch (error) {
+      console.error("Error deleting comment: ", error);
+    }
   };
 
   return (
     <div className={`flex flex-col ${tasks.length > 15 ? "" : "h-screen"}`}>
       <section className="container mx-auto py-4 px-8">
+        {error && <Alert type="error" message={error.message} />}
+        {success && <Alert type="success" message={success.message} />}
+        {defaultData && <Alert type="default" message={defaultData.message} />}
         <div className="container px-4 md:px-6">
-          <h3 className="text-gray-800 text-4xl font-bold">My Todo List</h3>
+          <h3 className="text-gray-800 text-4xl font-bold">All Todo List</h3>
           <div className="mt-5 space-y-2">
             <Button
               type="button"
@@ -118,40 +192,40 @@ export const TasksPage = () => {
         </div>
       </section>
 
-      <section className="container mx-auto py-4 px-8">
-        <div className="container px-4 md:px-6">
-          <div className="mt-5 space-y-2">
-            {tasks.map((task) => (
-              <div key={task.id} className="flex items-center justify-between bg-white shadow-sm rounded-lg p-4">
-                <div>
-                  <h4 className="text-lg font-semibold">{task.title}</h4>
-                  <p className="text-sm text-gray-500">{task.description}</p>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <button
-                    type="button"
-                    className="text-xs text-gray-500"
-                    onClick={() => handleDeleteTask(task.id)}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    type="button"
-                    className="text-xs text-gray-500"
-                    onClick={() => handleToggleTask(task.id)}
-                  >
-                    {task.completed ? "Mark as pending" : "Mark as completed"}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+      <section className="py-4 px-8">
+        <div className="px-4 md:px-6">
+          {loading ? (
+            <TaskSkeleton />
+          ) : (
+            <div>
+              {tasks.length > 0 ? (
+                <TaskByUserList
+                  tasks={tasks}
+                  statusLabels={statusLabels}
+                  handleToggleTask={handleToggleTask}
+                  handleDeleteTask={handleDeleteTask}
+                  handleAddComment={handleAddComment}
+                  handleDeleteComment={handleDeleteComment}
+                />
+              ) : (
+                <h4 className="text-gray-500 text-center text-3xl select-none">
+                  No tasks found. Add one!
+                </h4>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
       {isModalOpen && (
-        <ModalTask handleInputChange={handleInputChange} handleAddTask={handleAddTask} setIsModalOpen={setIsModalOpen} handleFileChange={handleFileChange} imageName={imageName} />
+        <ModalTask
+          handleInputChange={handleInputChange}
+          handleAddTask={handleAddTask}
+          setIsModalOpen={setIsModalOpen}
+          handleFileChange={handleFileChange}
+          imageName={imageName}
+        />
       )}
     </div>
   );
-}
+};

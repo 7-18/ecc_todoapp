@@ -5,4 +5,5 @@ export const RoutePaths = {
   CONFIRM_SIGNUP: "/confirm-sign-up",
   TASKS: "/tasks",
   IMAGES: "/images",
+  PROFILE: "/profile",
 };

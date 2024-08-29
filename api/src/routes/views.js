@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   commentsWithUserData,
   tasksImagesWithUserData,
+  tasksImagesWithUsersData,
   tasksWithUserData,
 } from "../controllers/views.js";
 
@@ -103,5 +104,6 @@ const router = Router();
 router.get("/comments-user-view/:task_id", commentsWithUserData);
 router.get("/tasks-user-view", tasksWithUserData);
 router.get("/tasks-images-user-view/:user_id", tasksImagesWithUserData);
+router.get("/tasks-images-users-view", tasksImagesWithUsersData);
 
 export default router;

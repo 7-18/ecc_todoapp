@@ -213,3 +213,13 @@ export const getTasksImagesUserView = async (id) => {
     throw error;
   }
 };
+
+export const getTasksImageUsersView = async () => {
+  try {
+    const response = await urlApi.get("/api/v1/tasks-images-users-view");
+    return response.data;
+  } catch (error) {
+    console.error("Error getting tasks image users view: ", error);
+    throw error;
+  }
+};

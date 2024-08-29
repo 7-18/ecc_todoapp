@@ -50,6 +50,7 @@ export const RegisterPage = () => {
 
           await signUpAmplify(
             {
+              id: response.data.id,
               username: formValues.username.toLowerCase(),
               email: formValues.email.toLowerCase(),
               firstName: formValues.firstName.toLowerCase(),

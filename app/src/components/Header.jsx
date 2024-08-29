@@ -12,9 +12,8 @@ export const Header = ({ status, pathname }) => {
   ];
 
   const NAV_ITEMS_AUTHENTICATE = [
-    { to: "/", label: "Tasks" },
+    { to: "/tasks", label: "Tasks" },
     { to: "/images", label: "Images" },
-    { to: "/profile", label: "Profile" },
   ];
 
   return (

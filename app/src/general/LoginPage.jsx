@@ -2,10 +2,13 @@ import { useState } from "react";
 import { Login } from "../components/Login";
 import { NavItem } from "../components/NavItem";
 import { useAuthStore } from "../hooks/useAuthStore";
+import { Alert } from "../components/Alert";
 
 export const LoginPage = () => {
   const { startLogin } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [formValues, setFormValues] = useState({
     email: "",
     password: "",
@@ -24,14 +27,17 @@ export const LoginPage = () => {
 
     try {
       await startLogin(formValues.email, formValues.password);
+      setSuccess("Login successful");
     } catch (error) {
-      alert(error);
+      setError(error.message);
     }
   };
 
   return (
     <div className="flex flex-col h-[83.5vh]">
       <main className="flex-1 flex items-center justify-center">
+        {error && <Alert type="error" message={error} />}
+        {success && <Alert type="success" message={success} />}
         <div className="w-full max-w-md space-y-8 px-4 bg-white text-gray-600 sm:px-0">
           <div className="text-center">
             <div className="mt-5 space-y-2">
