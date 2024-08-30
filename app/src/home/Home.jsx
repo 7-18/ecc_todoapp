@@ -9,6 +9,8 @@ import {
   deleteAllTasks,
   updateTaskStatus,
   getTasksImagesUserView,
+  createComment,
+  deleteComment,
 } from "../services/httpClient";
 import { TaskByUserList } from "../components/TaskByUserList";
 import { TaskSkeleton } from "../components/TaskSkeleton";
@@ -169,6 +171,34 @@ export const Home = () => {
     }
   };
 
+  const handleAddComment = async (id, comment) => {
+    try {
+      await createComment({
+        text: comment,
+        task_id: id,
+        user_id: user_id,
+      });
+      const response = await getTasksByUserId();
+      setTasks(response.data);
+      setSuccess({ message: "Comment added successfully" });
+      console.log("Comment added");
+    } catch (error) {
+      console.error("Error adding comment: ", error);
+    }
+  };
+
+  const handleDeleteComment = async (id) => {
+    try {
+      await deleteComment(id);
+      const response = await getTasksByUserId();
+      setTasks(response.data);
+      setDefaultData({ message: "Comment deleted successfully" });
+      console.log("Comment deleted");
+    } catch (error) {
+      console.error("Error deleting comment: ", error);
+    }
+  };
+
   return (
     <div className={`flex flex-col ${tasks.length > 15 ? "" : "h-screen"}`}>
       <section className="container mx-auto py-4 px-8">
@@ -201,6 +231,8 @@ export const Home = () => {
                   statusLabels={statusLabels}
                   handleToggleTask={handleToggleTask}
                   handleDeleteTask={handleDeleteTask}
+                  handleAddComment={handleAddComment}
+                  handleDeleteComment={handleDeleteComment}
                 />
               ) : (
                 <h4 className="text-gray-500 text-center text-3xl select-none">
